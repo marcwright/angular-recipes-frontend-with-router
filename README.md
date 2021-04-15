@@ -275,6 +275,96 @@ export class LoginComponent implements OnInit {
 
 <br>
 
+## GET Categories for logged in user
+
+`category.service.ts`
+
+```js
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { HttpHeaders } from '@angular/common/http';
+
+const herokuUrl = 'https://damp-bayou-38809.herokuapp.com';
+
+
+@Injectable({
+  providedIn: 'root'
+})
+export class CategoryService {
+
+  constructor(private http: HttpClient) { }
+
+  getCategories(): void {
+    const token = localStorage.getItem('token');
+    const requestOptions = {
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${token}`
+      }),
+    };
+    this.http
+      .get(`${herokuUrl}/api/categories`, requestOptions)
+      .toPromise()
+      .then(response => {
+        console.log(response);
+        return response;
+      })
+      .catch(error => console.log(error));
+  }
+}
+```
+
+`categories.component.ts`
+
+```js
+import { CategoryService } from 'src/app/services/category/category.service';
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-categories',
+  templateUrl: './categories.component.html',
+  styleUrls: ['./categories.component.css']
+})
+export class CategoriesComponent implements OnInit {
+  public categories: [];
+
+  constructor(private categoryService: CategoryService) { }
+
+  getCategories(): void {
+    console.log('get Categories');
+    this.categoryService.getCategories();
+  }
+
+  ngOnInit(): void {
+  }
+
+}
+```
+
+`categories.component.html`
+
+```html
+<section>
+<!--  <h2>Get All Categories for {{this.emailAddress}}</h2>-->
+  <button (click)="getCategories()">Get All Categories</button>
+</section>
+
+<div *ngIf="categories">
+  <h4>All Categories</h4>
+  <ul>
+    <li *ngFor="let category of categories">
+      {{category.name}} -- {{category.description}}
+      <button (click)="deleteCategory(category)">delete</button>
+      <form (submit)="createRecipe(category)">
+        <input [(ngModel)]="recipeName" name="recipeName" type="text" placeholder="new recipe" />
+        <input type="submit"/>
+      </form>
+    </li>
+  </ul>
+</div>
+```
+
+<br>
+
 ## Heroku Deployment
 
 [Heroku Angular Reference](https://itnext.io/how-to-deploy-angular-application-to-heroku-1d56e09c5147)
@@ -283,9 +373,13 @@ export class LoginComponent implements OnInit {
 1. `heroku create NAME_OF_APP`
 
 
-1. `package.json`
+1. Run `node -v` and `npm -v` and copy your versions into `package.json`. 
 
 	```js
+	 "engines": {
+    	"node": "15.9.0",
+   		"npm": "7.7.6"
+	  },
 	 "scripts": {
 	    "ng": "ng",
 	    "start": "node server.js",
@@ -296,6 +390,10 @@ export class LoginComponent implements OnInit {
 	    "heroku-postbuild": "ng build --prod"
 	  },
 	 ```
+1. Copy `"typescript": "YOUR_VERSION"` from devDependencies to dependencies to also inform Heroku what typescript version to use.
+	 
+1. `npm install enhanced-resolve@3.3.0 --save-dev`
+1. `npm i express path`
 
 1. In the root of your project: `touch server.js`. Replace the path with the name of your project folder.
 
