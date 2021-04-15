@@ -12,12 +12,10 @@ export class UserService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  registerUser(newUser): void {
+  registerUser(newUser): any {
     console.log(newUser);
-    this.http
+    return this.http
       .post(`${herokuUrl}/auth/users/register`, newUser)
-      .toPromise()
-      .then(response => console.log(response));
   }
 
   loginUser(user): void {
