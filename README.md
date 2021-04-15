@@ -294,21 +294,15 @@ export class CategoryService {
 
   constructor(private http: HttpClient) { }
 
-  getCategories(): void {
+  getCategories(): any {
     const token = localStorage.getItem('token');
     const requestOptions = {
       headers: new HttpHeaders({
         Authorization: `Bearer ${token}`
       }),
     };
-    this.http
-      .get(`${herokuUrl}/api/categories`, requestOptions)
-      .toPromise()
-      .then(response => {
-        console.log(response);
-        return response;
-      })
-      .catch(error => console.log(error));
+    return this.http
+      .get(`${herokuUrl}/api/categories`, requestOptions);
   }
 }
 ```
@@ -329,9 +323,10 @@ export class CategoriesComponent implements OnInit {
 
   constructor(private categoryService: CategoryService) { }
 
-  getCategories(): void {
-    console.log('get Categories');
-    this.categoryService.getCategories();
+  getCategories(): any {
+    this.categoryService.getCategories().subscribe(response => {
+      this.categories = response;
+    });
   }
 
   ngOnInit(): void {
