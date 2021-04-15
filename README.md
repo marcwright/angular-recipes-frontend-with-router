@@ -277,6 +277,9 @@ export class LoginComponent implements OnInit {
 
 ## Heroku Deployment
 
+[Heroku Angular Reference](https://itnext.io/how-to-deploy-angular-application-to-heroku-1d56e09c5147)
+[Mike Dang Heroku Lesson](https://git.generalassemb.ly/dang/angular-heroku)
+
 1. `heroku create NAME_OF_APP`
 
 
