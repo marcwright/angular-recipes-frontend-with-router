@@ -30,8 +30,5 @@ export class UserService {
         console.log(response, token);
       })
       .catch(error => console.log(error));
-      // .then(() => {
-      //   this.getCategories();
-      // });
   }
 }
