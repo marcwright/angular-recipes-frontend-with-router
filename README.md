@@ -272,3 +272,53 @@ export class LoginComponent implements OnInit {
       .catch(error => console.log(error));
   }
 ```
+
+<br>
+
+## Heroku Deployment
+
+1. `heroku create NAME_OF_APP`
+
+
+1. `package.json`
+
+	```js
+	 "scripts": {
+	    "ng": "ng",
+	    "start": "node server.js",
+	    "build": "ng build",
+	    "test": "ng test",
+	    "lint": "ng lint",
+	    "e2e": "ng e2e",
+	    "heroku-postbuild": "ng build --prod"
+	  },
+	 ```
+
+1. In the root of your project: `touch server.js`. Replace the path with the name of your project folder.
+
+```js
+//Install express server
+const express = require('express');
+const path = require('path');
+
+const app = express();
+
+// Serve only the static files from the dist directory
+// Replace angular-recipes-frontend with your project name
+app.use(express.static(__dirname + '/dist/angular-recipes-frontend'));
+
+app.get('/*', function(req,res) {
+
+  // Replace angular-recipes-frontend with your project name
+  res.sendFile(path.join(__dirname+'/dist/angular-recipes-frontend/index.html'));
+});
+
+// Start the app by listening on the default Heroku port
+app.listen(process.env.PORT || 8080);
+```
+
+1. In the root of your project: `touch Procfile`.
+
+```
+web: npm start
+```
