@@ -23,5 +23,17 @@ export class CategoryService {
       .get(`${herokuUrl}/api/categories`, requestOptions);
   }
 
+  createRecipe(category, newRecipe): any {
+    console.log('service: ', category, newRecipe);
+    const token = localStorage.getItem('token');
+    const requestOptions = {
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${token}`
+      }),
+    };
+    return this.http
+      .post(`${herokuUrl}/api/categories/${category.id}/recipes`, newRecipe, requestOptions);
+  }
+
 
 }
