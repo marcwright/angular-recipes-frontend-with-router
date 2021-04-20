@@ -389,8 +389,35 @@ export class CategoriesComponent implements OnInit {
     });
   }
 ```
+<br>
 
+## Render Recipes for a Category
 
+`categories.component.html`
+
+```html
+<section>
+  <button (click)="getCategories()">Get All Categories</button>
+</section>
+
+<div *ngIf="categories">
+  <h4>All Categories</h4>
+  <ul>
+    <li *ngFor="let category of categories">
+      {{category.name}} -- {{category.description}}
+      <button (click)="deleteCategory(category)">delete</button>
+      <ul>
+        <li *ngFor="let recipe of category.recipeList">
+        {{recipe.name}}
+      </ul>
+      <form (submit)="createRecipe(category)">
+        <input [(ngModel)]="recipeName" name="recipeName" type="text" placeholder="new recipe" />
+        <input type="submit"/>
+      </form>
+    </li>
+  </ul>
+</div>
+```
 <br>
 
 ## Heroku Deployment
