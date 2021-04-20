@@ -360,6 +360,39 @@ export class CategoriesComponent implements OnInit {
 
 <br>
 
+## POST new Recipe for a Category
+
+`category.service.ts`
+
+```js
+  createRecipe(category, newRecipe): any {
+    console.log('service: ', category, newRecipe);
+    const token = localStorage.getItem('token');
+    const requestOptions = {
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${token}`
+      }),
+    };
+    return this.http
+      .post(`${herokuUrl}/api/categories/${category.id}/recipes`, newRecipe, requestOptions);
+  }
+```
+
+`categories.component.ts`
+
+```js
+  createRecipe(category): any {
+    console.log('component: ', category, this.recipeName);
+    const newRecipe = {name: this.recipeName};
+    this.categoryService.createRecipe(category, newRecipe).subscribe(response => {
+      console.log(response);
+    });
+  }
+```
+
+
+<br>
+
 ## Heroku Deployment
 
 [Heroku Angular Reference](https://itnext.io/how-to-deploy-angular-application-to-heroku-1d56e09c5147)
