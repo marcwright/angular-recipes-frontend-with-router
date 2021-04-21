@@ -139,276 +139,332 @@ nav {
 2. `cd src/app/services/user`
 3. `ng g s user`
 
-`signup.component.html`
+1. `signup.component.html`
 
-```html
-<form>
-  <h2>Register a User</h2>
-  <input [(ngModel)]="userName" type="text" name="userName" placeholder="User Name"/>
-  <input [(ngModel)]="emailAddress" type="text" name="emailAddress" placeholder="Email Address"/>
-  <input [(ngModel)]="password" type="text" name="password" placeholder="Password"/>
-  <input (click)="registerUser()" type="submit" value="Register"/>
-</form>
-```
+	```html
+	<form>
+	  <h2>Register a User</h2>
+	  <input [(ngModel)]="userName" type="text" name="userName" placeholder="User Name"/>
+	  <input [(ngModel)]="emailAddress" type="text" name="emailAddress" placeholder="Email Address"/>
+	  <input [(ngModel)]="password" type="text" name="password" placeholder="Password"/>
+	  <input (click)="registerUser()" type="submit" value="Register"/>
+	</form>
+	```
 
-`signup.component.ts`
+1. `signup.component.ts`
 
-```js
-import {UserService} from 'src/app/services/user/user.service';
-import { Component, OnInit } from '@angular/core';
+	```js
+	import {UserService} from 'src/app/services/user/user.service';
+	import { Component, OnInit } from '@angular/core';
+	
+	@Component({
+	  selector: 'app-signup',
+	  templateUrl: './signup.component.html',
+	  styleUrls: ['./signup.component.css']
+	})
+	export class SignupComponent implements OnInit {
+	  public userName: string;
+	  public emailAddress: string;
+	  public password: string;
+	
+	
+	  registerUser(): void {
+	    const newUser = {userName: this.userName, emailAddress: this.emailAddress, password: this.password};
+	    this.userService.registerUser(newUser);
+	  }
+	  constructor(private userService: UserService) {
+	
+	  }
+	
+	  ngOnInit(): void {
+	
+	  }
+	
+	}
+	```
 
-@Component({
-  selector: 'app-signup',
-  templateUrl: './signup.component.html',
-  styleUrls: ['./signup.component.css']
-})
-export class SignupComponent implements OnInit {
-  public userName: string;
-  public emailAddress: string;
-  public password: string;
+1. `user.service.ts`
 
-
-  registerUser(): void {
-    const newUser = {userName: this.userName, emailAddress: this.emailAddress, password: this.password};
-    this.userService.registerUser(newUser);
-  }
-  constructor(private userService: UserService) {
-
-  }
-
-  ngOnInit(): void {
-
-  }
-
-}
-```
-
-
-`user.service.ts`
-
-```js
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-
-const herokuUrl = 'https://damp-bayou-38809.herokuapp.com';
-
-@Injectable({
-  providedIn: 'root'
-})
-export class UserService {
-
-
-  constructor(private http: HttpClient) { console.log('user service loaded'); }
-
-  registerUser(newUser): void {
-    console.log(newUser);
-    this.http
-      .post(`${herokuUrl}/auth/users/register`, newUser)
-      .toPromise()
-      .then(response => console.log(response));
-  }
-}
-```
+	```js
+	import { Injectable } from '@angular/core';
+	import { HttpClient } from '@angular/common/http';
+	
+	const herokuUrl = 'https://damp-bayou-38809.herokuapp.com';
+	
+	@Injectable({
+	  providedIn: 'root'
+	})
+	export class UserService {
+	
+	
+	  constructor(private http: HttpClient) { console.log('user service loaded'); }
+	
+	  registerUser(newUser): void {
+	    console.log(newUser);
+	    this.http
+	      .post(`${herokuUrl}/auth/users/register`, newUser)
+	      .toPromise()
+	      .then(response => console.log(response));
+	  }
+	}
+	```
 
 <br>
 
 ## LogIn User
 
-`login.component.ts`
+1. `login.component.ts`
 
-```js
-import {UserService} from 'src/app/services/user/user.service';
-import { Component, OnInit } from '@angular/core';
+	```js
+	import {UserService} from 'src/app/services/user/user.service';
+	import { Component, OnInit } from '@angular/core';
+	
+	@Component({
+	  selector: 'app-login',
+	  templateUrl: './login.component.html',
+	  styleUrls: ['./login.component.css']
+	})
+	export class LoginComponent implements OnInit {
+	  public email: string;
+	  public password: string;
+	
+	  constructor(private userService: UserService) { }
+	
+	  loginUser(): void {
+	    const user = {email: this.email, password: this.password};
+	    console.log(user);
+	    this.userService.loginUser(user);
+	  }
+	
+	  ngOnInit(): void {
+	  }
+	
+	}
+	```
 
-@Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
-})
-export class LoginComponent implements OnInit {
-  public email: string;
-  public password: string;
+1. `login.component.html`
 
-  constructor(private userService: UserService) { }
+	```html
+	<form>
+	  <h2>Login a User</h2>
+	  <input [(ngModel)]="email" type="text" name="email" placeholder="User Name"/>
+	  <input [(ngModel)]="password" type="text" name="password" placeholder="Password"/>
+	  <input (click)="loginUser()" type="submit" value="Log In"/>
+	</form>
+	```
 
-  loginUser(): void {
-    const user = {email: this.email, password: this.password};
-    console.log(user);
-    this.userService.loginUser(user);
-  }
-
-  ngOnInit(): void {
-  }
-
-}
-```
-
-`login.component.html`
-
-```html
-<form>
-  <h2>Login a User</h2>
-  <input [(ngModel)]="email" type="text" name="email" placeholder="User Name"/>
-  <input [(ngModel)]="password" type="text" name="password" placeholder="Password"/>
-  <input (click)="loginUser()" type="submit" value="Log In"/>
-</form>
-```
-
-`user.service.ts`
-
-```js
-
-  loginUser(user): void {
-    console.log(user);
-    this.http
-      .post(`${herokuUrl}/auth/users/login`, user)
-      .toPromise()
-      .then(response => {
-        const token = response['jwt'];
-        localStorage.setItem('currentUser', `${user.email}`);
-        localStorage.setItem('token', `${token}`);
-        console.log(response, token);
-      })
-      .catch(error => console.log(error));
-  }
-```
+1. `user.service.ts`
+	
+	```js
+	
+	  loginUser(user): void {
+	    console.log(user);
+	    this.http
+	      .post(`${herokuUrl}/auth/users/login`, user)
+	      .toPromise()
+	      .then(response => {
+	        const token = response['jwt'];
+	        localStorage.setItem('currentUser', `${user.email}`);
+	        localStorage.setItem('token', `${token}`);
+	        console.log(response, token);
+	      })
+	      .catch(error => console.log(error));
+	  }
+	```
 
 <br>
 
 ## Logout User
 
-`logout.component.ts`
+1. `logout.component.ts`
 
-```js
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-
-@Component({
-  selector: 'app-logout',
-  templateUrl: './logout.component.html',
-  styleUrls: ['./logout.component.css']
-})
-export class LogoutComponent implements OnInit {
-
-  constructor(private router: Router) { }
-
-  ngOnInit(): void {
-    localStorage.removeItem('currentUser');
-    localStorage.removeItem('token');
-    this.router.navigate(['/login']);
-  }
-}
-```
-
-`app-routing.module.ts`
-
-```js
-
-	...
+	```js
+	import { Component, OnInit } from '@angular/core';
+	import { Router } from '@angular/router';
 	
-		import { LogoutComponent} from './logout/logout.component';
+	@Component({
+	  selector: 'app-logout',
+	  templateUrl: './logout.component.html',
+	  styleUrls: ['./logout.component.css']
+	})
+	export class LogoutComponent implements OnInit {
+	
+	  constructor(private router: Router) { }
+	
+	  ngOnInit(): void {
+	    localStorage.removeItem('currentUser');
+	    localStorage.removeItem('token');
+	    this.router.navigate(['/login']);
+	  }
+	}
+	```
+
+1. `app-routing.module.ts`
+
+	```js
+	
+		...
 		
-	...
-	
-		{
-    		path: 'logout',
-    		component: LogoutComponent
-  		}
+			import { LogoutComponent} from './logout/logout.component';
+			
+		...
 		
-```
+			{
+	    		path: 'logout',
+	    		component: LogoutComponent
+	  		}
+			
+	```
 
-`app.component.html`
+1. `app.component.html`
 
-```html
-
-	<a routerLink="/logout">LOG OUT</a>
+	```html
 	
-```
+		<a routerLink="/logout">LOG OUT</a>
+		
+	```
 
 <br>
 
 ## GET Categories for logged in user
 
-`category.service.ts`
+1. `category.service.ts`
 
-```js
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { HttpHeaders } from '@angular/common/http';
+	```js
+	import { Injectable } from '@angular/core';
+	import { HttpClient } from '@angular/common/http';
+	import { HttpHeaders } from '@angular/common/http';
+	
+	const herokuUrl = 'https://damp-bayou-38809.herokuapp.com';
+	
+	
+	@Injectable({
+	  providedIn: 'root'
+	})
+	export class CategoryService {
+	
+	  constructor(private http: HttpClient) { }
+	
+	  getCategories(): any {
+	    const token = localStorage.getItem('token');
+	    const requestOptions = {
+	      headers: new HttpHeaders({
+	        Authorization: `Bearer ${token}`
+	      }),
+	    };
+	    return this.http
+	      .get(`${herokuUrl}/api/categories`, requestOptions);
+	  }
+	}
+	```
 
-const herokuUrl = 'https://damp-bayou-38809.herokuapp.com';
+1. `categories.component.ts`
+
+	```js
+	import { CategoryService } from 'src/app/services/category/category.service';
+	import { Component, OnInit } from '@angular/core';
+	
+	@Component({
+	  selector: 'app-categories',
+	  templateUrl: './categories.component.html',
+	  styleUrls: ['./categories.component.css']
+	})
+	export class CategoriesComponent implements OnInit {
+	  public categories: [];
+	
+	  constructor(private categoryService: CategoryService) { }
+	
+	  getCategories(): any {
+	    this.categoryService.getCategories().subscribe(response => {
+	      this.categories = response;
+	    });
+	  }
+	
+	  ngOnInit(): void {
+	  }
+	
+	}
+	```
+
+1. `categories.component.html`
+	
+	```html
+	<section>
+	<!--  <h2>Get All Categories for {{this.emailAddress}}</h2>-->
+	  <button (click)="getCategories()">Get All Categories</button>
+	</section>
+	
+	<div *ngIf="categories">
+	  <h4>All Categories</h4>
+	  <ul>
+	    <li *ngFor="let category of categories">
+	      {{category.name}} -- {{category.description}}
+	      <button (click)="deleteCategory(category)">delete</button>
+	      <form (submit)="createRecipe(category)">
+	        <input [(ngModel)]="recipeName" name="recipeName" type="text" placeholder="new recipe" />
+	        <input type="submit"/>
+	      </form>
+	    </li>
+	  </ul>
+	</div>
+	```
+
+<br>
+
+## POST New Category
+
+1. `categories.component.html`
+
+	```html
+	<h4>Create New Category</h4>
+	<form (submit)="createCategory()">
+	  <input [(ngModel)]="categoryName" name="categoryName" type="text" placeholder="name" />
+	  <input [(ngModel)]="categoryDescription" name="categoryDescription" type="text" placeholder="description" />
+	  <input type="submit"/>
+	</form>
+	```
 
 
-@Injectable({
-  providedIn: 'root'
-})
-export class CategoryService {
 
-  constructor(private http: HttpClient) { }
+1. `categories.component.ts`
 
-  getCategories(): any {
-    const token = localStorage.getItem('token');
-    const requestOptions = {
-      headers: new HttpHeaders({
-        Authorization: `Bearer ${token}`
-      }),
-    };
-    return this.http
-      .get(`${herokuUrl}/api/categories`, requestOptions);
-  }
-}
-```
+	```js
+	...
+		
+		public categories: any [];
+		
+	...
+	
+		  createCategory(): any {
+		    const newCategory = {
+		      name: this.categoryName,
+		      description: this.categoryDescription
+		    };
+		    this.categoryService.createCategory(newCategory).subscribe(response => {
+		      this.categories = [...this.categories, response];
+		    });
+		  }
+	
+	```
+	
+1. `category.service.ts`
 
-`categories.component.ts`
-
-```js
-import { CategoryService } from 'src/app/services/category/category.service';
-import { Component, OnInit } from '@angular/core';
-
-@Component({
-  selector: 'app-categories',
-  templateUrl: './categories.component.html',
-  styleUrls: ['./categories.component.css']
-})
-export class CategoriesComponent implements OnInit {
-  public categories: [];
-
-  constructor(private categoryService: CategoryService) { }
-
-  getCategories(): any {
-    this.categoryService.getCategories().subscribe(response => {
-      this.categories = response;
-    });
-  }
-
-  ngOnInit(): void {
-  }
-
-}
-```
-
-`categories.component.html`
-
-```html
-<section>
-<!--  <h2>Get All Categories for {{this.emailAddress}}</h2>-->
-  <button (click)="getCategories()">Get All Categories</button>
-</section>
-
-<div *ngIf="categories">
-  <h4>All Categories</h4>
-  <ul>
-    <li *ngFor="let category of categories">
-      {{category.name}} -- {{category.description}}
-      <button (click)="deleteCategory(category)">delete</button>
-      <form (submit)="createRecipe(category)">
-        <input [(ngModel)]="recipeName" name="recipeName" type="text" placeholder="new recipe" />
-        <input type="submit"/>
-      </form>
-    </li>
-  </ul>
-</div>
-```
+	```js
+	
+	...
+		
+	  createCategory(newCategory): any {
+	    console.log(newCategory);
+	    const token = localStorage.getItem('token');
+	    const requestOptions = {
+	      headers: new HttpHeaders({
+	        Authorization: `Bearer ${token}`
+	      }),
+	    };
+	    return this.http
+	      .post(`${herokuUrl}/api/categories/`, newCategory, requestOptions);
+	  }	
+	```
 
 <br>
 

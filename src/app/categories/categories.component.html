@@ -2,6 +2,13 @@
   <button (click)="getCategories()">Get All Categories</button>
 </section>
 
+<h4>Create New Category</h4>
+<form (submit)="createCategory()">
+  <input [(ngModel)]="categoryName" name="categoryName" type="text" placeholder="name" />
+  <input [(ngModel)]="categoryDescription" name="categoryDescription" type="text" placeholder="description" />
+  <input type="submit"/>
+</form>
+
 <div *ngIf="categories">
   <h4>All Categories</h4>
   <ul>
