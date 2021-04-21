@@ -5,9 +5,3 @@
   align-items: center;
   flex-direction: column;
 }
-header {
-  width: 100vw;
-}
-nav a {
-  margin-left: 20px;
-}

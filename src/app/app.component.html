@@ -1,23 +1,24 @@
-<div class="container">
-  <header>
-
-    <nav>
-      <a routerLink="/">Recipe App</a>
-      <a routerLink="/categories">All Categories</a>
+<nav>
+  <div class="nav-wrapper">
+    <a class="brand-logo" routerLink="/login">Recipe App</a>
+    <ul id="nav-mobile" class="right hide-on-med-and-down">
+      <li><a routerLink="/categories">All Categories</a></li>
 
       <span *ngIf="!this.currentUser">
-        <a routerLink="/signup">Sign Up</a>
-        <a routerLink="/login">Log In</a>
+        <li><a routerLink="/signup">Sign Up</a></li>
+        <li><a routerLink="/login">Log In</a></li>
       </span>
       <span *ngIf="this.currentUser">
-        <a routerLink="/logout">Log Out</a>
-        Hello, {{this.currentUser}}
+        <li><a routerLink="/logout">Log Out</a></li>
+        <li>Hello, {{this.currentUser}}</li>
       </span>
-    </nav>
-  </header>
-
-  <div>
-    <router-outlet></router-outlet>
+    </ul>
   </div>
+</nav>
+
+
+<div class="container">
+  <router-outlet></router-outlet>
 </div>
+
 
