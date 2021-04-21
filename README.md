@@ -420,6 +420,94 @@ export class CategoriesComponent implements OnInit {
 ```
 <br>
 
+## Single Category Component
+
+1. `ng g c category`
+1. Create a route for a single Category.
+
+
+	`app-routing.module.ts`
+
+	```js
+	
+		...
+		
+			import { CategoryComponent } from './category/category.component';
+	
+		...
+		
+		 	{
+		     path: 'categories/:id',
+		     component: CategoryComponent
+  		  	},
+	
+	```
+
+1. Move the `createRecipe()` logic from `CategoriesComponent` to `CategoryComponent`.
+
+	`category.component.ts`
+
+	```js
+	import { CategoryService } from 'src/app/services/category/category.service';
+	import { Component, OnInit } from '@angular/core';
+	import { ActivatedRoute } from '@angular/router';
+	
+	@Component({
+	  selector: 'app-category',
+	  templateUrl: './category.component.html',
+	  styleUrls: ['./category.component.css']
+	})
+	export class CategoryComponent implements OnInit {
+	  categoryId: string;
+	  category: any;
+	  recipeName = '';
+	
+	  constructor(private route: ActivatedRoute, private categoryService: CategoryService) { }
+	
+	  createRecipe(): any {
+	    console.log('component: ', this.category, this.recipeName);
+	    const newRecipe = {name: this.recipeName};
+	    this.categoryService.createRecipe(this.category, newRecipe).subscribe(response => {
+	      console.log(response);
+	    });
+	  }
+	
+	  ngOnInit(): void {
+	    this.route.paramMap
+	      .subscribe( params => {
+	        this.categoryId = params.get('id');
+	        this.categoryService.getCategory(this.categoryId).subscribe(response => {
+	          this.category = response;
+	          console.log(this.category);
+	        });
+	      });
+	  }
+	
+	}
+	```
+	
+1. `category.component.html`
+
+	```js
+	
+	<div *ngIf="category">
+	  <h4>{{category.name}}</h4>
+	  <p>{{category.description}}</p>
+	  <form (submit)="createRecipe()">
+	    <input [(ngModel)]="recipeName" name="recipeName" type="text" placeholder="new recipe" />
+	    <input type="submit"/>
+	  </form>
+	  <ul>
+	    <li *ngFor="let recipe of category.recipeList">
+	      {{recipe.name}}
+	      <button (click)="deleteRecipe(category)">delete</button>
+	    </li>
+	  </ul>
+	</div>
+	```
+
+<br>
+
 ## Heroku Deployment
 
 [Heroku Angular Reference](https://itnext.io/how-to-deploy-angular-application-to-heroku-1d56e09c5147)

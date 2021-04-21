@@ -9,13 +9,15 @@ import { CategoriesComponent } from './categories/categories.component';
 import { SignupComponent } from './signup/signup.component';
 
 import { AppRoutingModule } from './app-routing.module';
+import { CategoryComponent } from './category/category.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     CategoriesComponent,
-    SignupComponent
+    SignupComponent,
+    CategoryComponent
   ],
   imports: [
     BrowserModule,

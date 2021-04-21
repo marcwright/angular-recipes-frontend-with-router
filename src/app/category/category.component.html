@@ -1,0 +1,15 @@
+
+<div *ngIf="category">
+  <h4>{{category.name}}</h4>
+  <p>{{category.description}}</p>
+  <form (submit)="createRecipe()">
+    <input [(ngModel)]="recipeName" name="recipeName" type="text" placeholder="new recipe" />
+    <input type="submit"/>
+  </form>
+  <ul>
+    <li *ngFor="let recipe of category.recipeList">
+      {{recipe.name}}
+      <button (click)="deleteRecipe(category)">delete</button>
+    </li>
+  </ul>
+</div>
