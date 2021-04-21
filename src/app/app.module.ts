@@ -10,6 +10,7 @@ import { SignupComponent } from './signup/signup.component';
 
 import { AppRoutingModule } from './app-routing.module';
 import { CategoryComponent } from './category/category.component';
+import { LogoutComponent } from './logout/logout.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { CategoryComponent } from './category/category.component';
     LoginComponent,
     CategoriesComponent,
     SignupComponent,
-    CategoryComponent
+    CategoryComponent,
+    LogoutComponent
   ],
   imports: [
     BrowserModule,

@@ -275,6 +275,58 @@ export class LoginComponent implements OnInit {
 
 <br>
 
+## Logout User
+
+`logout.component.ts`
+
+```js
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
+@Component({
+  selector: 'app-logout',
+  templateUrl: './logout.component.html',
+  styleUrls: ['./logout.component.css']
+})
+export class LogoutComponent implements OnInit {
+
+  constructor(private router: Router) { }
+
+  ngOnInit(): void {
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('token');
+    this.router.navigate(['/login']);
+  }
+}
+```
+
+`app-routing.module.ts`
+
+```js
+
+	...
+	
+		import { LogoutComponent} from './logout/logout.component';
+		
+	...
+	
+		{
+    		path: 'logout',
+    		component: LogoutComponent
+  		}
+		
+```
+
+`app.component.html`
+
+```html
+
+	<a routerLink="/logout">LOG OUT</a>
+	
+```
+
+<br>
+
 ## GET Categories for logged in user
 
 `category.service.ts`
