@@ -276,11 +276,13 @@ nav {
 
 ## Logout User
 
+1. `ng g c logout`
+
 1. `logout.component.ts`
 
 	```js
 	import { Component, OnInit } from '@angular/core';
-	import { Router } from '@angular/router';
+	import { UserService } from 'src/app/services/user/user.service';
 	
 	@Component({
 	  selector: 'app-logout',
@@ -289,12 +291,10 @@ nav {
 	})
 	export class LogoutComponent implements OnInit {
 	
-	  constructor(private router: Router) { }
+	  constructor(private userService: UserService) { }
 	
 	  ngOnInit(): void {
-	    localStorage.removeItem('currentUser');
-	    localStorage.removeItem('token');
-	    this.router.navigate(['/login']);
+	    this.userService.logoutUser();
 	  }
 	}
 	```
@@ -323,6 +323,128 @@ nav {
 		<a routerLink="/logout">LOG OUT</a>
 		
 	```
+	
+1. `user.service.ts`
+	
+	```js
+	  logoutUser(): void {
+	    localStorage.removeItem('currentUser');
+	    localStorage.removeItem('token');
+	    this.currentUser = '';
+	    this.router.navigate(['/login']);
+	  }
+	```
+
+<br>
+
+## Conditional NavBar
+
+1. `app.component.html`
+
+	```html
+	<div class="container">
+	  <header>
+	    <a routerLink="/">Recipe App</a>
+	    <nav>
+	      <a routerLink="/categories">CATEGORIES</a>
+	
+	      <span *ngIf="!this.currentUser">
+	        <a routerLink="/signup">SIGN UP</a>
+	        <a routerLink="/login">LOG IN</a>
+	      </span>
+	      <span *ngIf="this.currentUser">
+	        <a routerLink="/logout">LOG OUT</a>
+	      </span>
+	    </nav>
+	  </header>
+	
+	  <div>
+	    <router-outlet></router-outlet>
+	  </div>
+	</div>
+	```
+
+1. `user.service.ts`
+
+	```js
+	import { Injectable } from '@angular/core';
+	import { HttpClient } from '@angular/common/http';
+	import { CategoryService } from '../category/category.service';
+	import { Router } from '@angular/router';
+	import { Subject } from 'rxjs';
+	
+	const herokuUrl = 'https://damp-bayou-38809.herokuapp.com';
+	
+	@Injectable({
+	  providedIn: 'root'
+	})
+	export class UserService {
+	  currentUser: string;
+	  searchSubject = new Subject();
+	
+	  constructor(private http: HttpClient, private router: Router) { }
+	
+	  registerUser(newUser): any {
+	    console.log(newUser);
+	    return this.http
+	      .post(`${herokuUrl}/auth/users/register`, newUser)
+	  }
+	
+	  loginUser(user): void {
+	    console.log(user);
+	
+	    this.http
+	      .post(`${herokuUrl}/auth/users/login`, user)
+	      .toPromise()
+	      .then(response => {
+	        const token = response['jwt'];
+	        localStorage.setItem('currentUser', `${user.email}`);
+	        localStorage.setItem('token', `${token}`);
+	        console.log(response, token);
+	        this.currentUser = user.email;
+	        this.searchSubject.next(this.currentUser);
+	        this.router.navigate(['/categories']);
+	      })
+	      .catch(error => console.log(error));
+	  }
+	
+	  logoutUser(): void {
+	    localStorage.removeItem('currentUser');
+	    localStorage.removeItem('token');
+	    this.currentUser = null;
+	    this.searchSubject.next(this.currentUser);
+	    this.router.navigate(['/login']);
+	  }
+	}
+	```
+
+1. `app.component.ts`
+
+	```js
+	import { Component, OnInit } from '@angular/core';
+	import { UserService } from 'src/app/services/user/user.service';
+	
+	@Component({
+	  selector: 'app-root',
+	  templateUrl: './app.component.html',
+	  styleUrls: ['./app.component.css']
+	})
+	export class AppComponent {
+	  title = 'angular-recipes-frontend';
+	  currentUser: any;
+	
+	  constructor(private userService: UserService) { }
+	
+	  // tslint:disable-next-line:use-lifecycle-interface
+	  ngOnInit(): void {
+	    this.userService.searchSubject.subscribe(currentUser => {
+	      this.currentUser = currentUser;
+	      console.log(currentUser);
+	    });
+	  }
+	}
+	```
+
 
 <br>
 

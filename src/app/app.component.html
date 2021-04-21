@@ -8,7 +8,7 @@
         <a routerLink="/signup">SIGN UP</a>
         <a routerLink="/login">LOG IN</a>
       </span>
-      <span *ngIf="!this.currentUser">
+      <span *ngIf="this.currentUser">
         <a routerLink="/logout">LOG OUT</a>
       </span>
     </nav>

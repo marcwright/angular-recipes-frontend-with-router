@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CategoryService } from '../category/category.service';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
 
 const herokuUrl = 'https://damp-bayou-38809.herokuapp.com';
 
@@ -10,6 +11,7 @@ const herokuUrl = 'https://damp-bayou-38809.herokuapp.com';
 })
 export class UserService {
   currentUser: string;
+  searchSubject = new Subject();
 
   constructor(private http: HttpClient, private router: Router) { }
 
@@ -21,6 +23,7 @@ export class UserService {
 
   loginUser(user): void {
     console.log(user);
+
     this.http
       .post(`${herokuUrl}/auth/users/login`, user)
       .toPromise()
@@ -30,6 +33,7 @@ export class UserService {
         localStorage.setItem('token', `${token}`);
         console.log(response, token);
         this.currentUser = user.email;
+        this.searchSubject.next(this.currentUser);
         this.router.navigate(['/categories']);
       })
       .catch(error => console.log(error));
@@ -38,7 +42,8 @@ export class UserService {
   logoutUser(): void {
     localStorage.removeItem('currentUser');
     localStorage.removeItem('token');
-    this.currentUser = '';
+    this.currentUser = null;
+    this.searchSubject.next(this.currentUser);
     this.router.navigate(['/login']);
   }
 }

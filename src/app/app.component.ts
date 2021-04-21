@@ -8,14 +8,15 @@ import { UserService } from 'src/app/services/user/user.service';
 })
 export class AppComponent {
   title = 'angular-recipes-frontend';
-  currentUser: string;
+  currentUser: any;
 
   constructor(private userService: UserService) { }
 
   // tslint:disable-next-line:use-lifecycle-interface
   ngOnInit(): void {
-
-      this.currentUser = this.userService.currentUser;
-      console.log(this.currentUser);
+    this.userService.searchSubject.subscribe(currentUser => {
+      this.currentUser = currentUser;
+      console.log(currentUser);
+    });
   }
 }
