@@ -3,9 +3,14 @@
     <a routerLink="/">Recipe App</a>
     <nav>
       <a routerLink="/categories">CATEGORIES</a>
-      <a routerLink="/signup">SIGN UP</a>
-      <a routerLink="/login">LOG IN</a>
-      <a routerLink="/logout">LOG OUT</a>
+
+      <span *ngIf="!this.currentUser">
+        <a routerLink="/signup">SIGN UP</a>
+        <a routerLink="/login">LOG IN</a>
+      </span>
+      <span *ngIf="!this.currentUser">
+        <a routerLink="/logout">LOG OUT</a>
+      </span>
     </nav>
   </header>
 
