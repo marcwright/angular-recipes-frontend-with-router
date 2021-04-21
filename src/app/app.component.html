@@ -2,14 +2,14 @@
   <header>
     <a routerLink="/">Recipe App</a>
     <nav>
-      <a routerLink="/categories">CATEGORIES</a>
+      <a routerLink="/categories">All Categories</a>
 
       <span *ngIf="!this.currentUser">
-        <a routerLink="/signup">SIGN UP</a>
-        <a routerLink="/login">LOG IN</a>
+        <a routerLink="/signup">Sign Up</a>
+        <a routerLink="/login">Log In</a>
       </span>
       <span *ngIf="this.currentUser">
-        <a routerLink="/logout">LOG OUT</a>
+        <a routerLink="/logout">Log Out</a>
       </span>
     </nav>
   </header>
