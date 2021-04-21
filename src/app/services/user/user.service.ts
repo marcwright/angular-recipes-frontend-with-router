@@ -34,4 +34,11 @@ export class UserService {
       })
       .catch(error => console.log(error));
   }
+
+  logoutUser(): void {
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('token');
+    this.currentUser = '';
+    this.router.navigate(['/login']);
+  }
 }
