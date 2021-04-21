@@ -1,5 +1,6 @@
 import { CategoryService } from 'src/app/services/category/category.service';
 import { Component, OnInit } from '@angular/core';
+declare const M;
 
 
 @Component({
@@ -17,6 +18,8 @@ export class CategoriesComponent implements OnInit {
   getCategories(): any {
     this.categoryService.getCategories().subscribe(response => {
       this.categories = response;
+
+
     });
   }
 
@@ -40,6 +43,11 @@ export class CategoriesComponent implements OnInit {
 
   ngOnInit(): void {
     this.getCategories();
+
+    if (!localStorage.getItem('currentUser')) {
+      const toastHTML = '<span>You must login to see your categories</span>';
+      M.toast({html: toastHTML});
+    }
   }
 
 }

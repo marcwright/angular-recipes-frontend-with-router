@@ -755,6 +755,14 @@ nav {
 
 <br>
 
+## Add Materialze and Toast
+
+<br>
+
+## Combine login and sign up components into a user component
+
+<br>
+
 ## Heroku Deployment
 
 [Heroku Angular Reference](https://itnext.io/how-to-deploy-angular-application-to-heroku-1d56e09c5147)
