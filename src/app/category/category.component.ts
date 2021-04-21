@@ -12,7 +12,7 @@ export class CategoryComponent implements OnInit {
   category: any;
   recipeName:string;
   recipeTime: string;
-  recipePortions:string;
+  recipePortions:number;
   recipeIngredients:string;
   recipeSteps:string;
   recipeIsPublic:boolean;
@@ -29,8 +29,18 @@ export class CategoryComponent implements OnInit {
       steps: this.recipeSteps,
       isPublic: this.recipeIsPublic
     };
+    this.recipeName = '';
     this.categoryService.createRecipe(this.category, newRecipe).subscribe(response => {
       this.category.recipeList = [...this.category.recipeList, response];
+
+      console.log(response);
+    });
+  }
+  deleteRecipe(recipe): any {
+    const index = this.category.recipeList.indexOf(recipe);
+    console.log(index)
+    this.categoryService.deleteRecipe(this.category, recipe.id).subscribe(response => {
+      this.category.recipeList.splice(index, 1);
       console.log(response);
     });
   }

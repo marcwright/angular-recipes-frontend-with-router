@@ -58,5 +58,16 @@ export class CategoryService {
       .post(`${herokuUrl}/api/categories/${category.id}/recipes`, newRecipe, requestOptions);
   }
 
+  deleteRecipe(category, recipeId): any {
+    const token = localStorage.getItem('token');
+    const requestOptions = {
+      headers: new HttpHeaders({
+        Authorization: `Bearer ${token}`
+      }),
+    };
+    return this.http
+      .delete(`${herokuUrl}/api/categories/${category.id}/recipes/${recipeId}`, requestOptions);
+  }
+
 
 }

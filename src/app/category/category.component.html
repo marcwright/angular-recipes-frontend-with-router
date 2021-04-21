@@ -7,7 +7,7 @@
     <ul class="collection">
       <li class="collection-item" *ngFor="let recipe of category.recipeList">
         {{recipe.name}}
-        <a class="secondary-content" (click)="deleteRecipe(category)">delete</a>
+        <a class="secondary-content" (click)="deleteRecipe(recipe)">delete</a>
       </li>
     </ul>
   </div>
