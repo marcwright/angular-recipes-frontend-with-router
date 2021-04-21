@@ -38,7 +38,7 @@ export class CategoryComponent implements OnInit {
   }
   deleteRecipe(recipe): any {
     const index = this.category.recipeList.indexOf(recipe);
-    console.log(index)
+    console.log(index);
     this.categoryService.deleteRecipe(this.category, recipe.id).subscribe(response => {
       this.category.recipeList.splice(index, 1);
       console.log(response);

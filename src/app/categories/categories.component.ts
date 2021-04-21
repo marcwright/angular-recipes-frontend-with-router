@@ -30,6 +30,14 @@ export class CategoriesComponent implements OnInit {
     });
   }
 
+  deleteCategory(category): any {
+    const index = this.categories.indexOf(category);
+    console.log(index);
+    this.categoryService.deleteCategory(category).subscribe(response => {
+      this.categories.splice(index, 1);
+    });
+  }
+
   ngOnInit(): void {
     this.getCategories();
   }
