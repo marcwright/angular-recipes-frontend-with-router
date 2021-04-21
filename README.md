@@ -133,6 +133,10 @@ nav {
 
 <br>
 
+## Add Materialize
+
+<br>
+
 ## Register User
 
 1. `mkdir src/app/services/user`
@@ -735,6 +739,15 @@ nav {
 	  </ul>
 	</div>
 	```
+
+<br>
+
+## DELETE Recipe
+
+
+<br>
+
+## DELETE Category
 
 <br>
 
