@@ -12,6 +12,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { CategoryComponent } from './category/category.component';
 import { LogoutComponent } from './logout/logout.component';
 
+
 @NgModule({
   declarations: [
     AppComponent,

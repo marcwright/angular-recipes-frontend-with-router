@@ -18,6 +18,7 @@ export class CategoryComponent implements OnInit {
     console.log('component: ', this.category, this.recipeName);
     const newRecipe = {name: this.recipeName};
     this.categoryService.createRecipe(this.category, newRecipe).subscribe(response => {
+      this.category.recipeList = [...this.category.recipeList, response];
       console.log(response);
     });
   }
