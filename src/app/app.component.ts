@@ -14,6 +14,8 @@ export class AppComponent {
 
   // tslint:disable-next-line:use-lifecycle-interface
   ngOnInit(): void {
+    // set currentUser if server restarts
+    this.currentUser = localStorage.getItem('currentUser') || null;
     this.userService.searchSubject.subscribe(currentUser => {
       this.currentUser = currentUser;
       console.log(currentUser);
