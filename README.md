@@ -4,22 +4,21 @@
 - [Spring Boot Recipes Backend](https://damp-bayou-38809.herokuapp.com)
 - [SpringBoot Backend API Endpoints](https://git.generalassemb.ly/sureshmelvinsigera/endpoints/blob/master/README.md)
 
-1. `ng new angular-recipes-frontend`
+1. `ng new angular-recipes-frontend` 
 
-## Create a Category Service
+	- Go ahead and let the cli add routing for you
+	- If you get a Jasmine `The Schematic workflow failed. See above.` error then [try this Stack Overflow issue](https://stackoverflow.com/questions/67463513/angular-the-schematic-workflow-failed-see-above)
 
-1. `mkdir src/app/services`
-2. `mkdir src/app/services/category`
-3. `cd src/app/services/category`
-4. `ng g s category`
-
+<br>
 
 ## Generate Components and Router
 
-1. `ng g c register`
-2. `ng g c categories`
-3. `ng g c login`
-4. `ng g c home`
+```bash
+ng g c signup
+ng g c categories
+ng g c login
+ng g c home
+```
 
 `app-routing.module.ts`
 
@@ -59,51 +58,59 @@ export class AppRoutingModule { }
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
-
 import { FormsModule } from '@angular/forms';
-import { AppComponent } from './app.component';
-import { LoginComponent } from './login/login.component';
-import { CategoriesComponent } from './categories/categories.component';
-import { SignupComponent } from './signup/signup.component';
 
 import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { HomeComponent } from './home/home.component';
+import {SignupComponent} from "./signup/signup.component";
+import { LoginComponent } from './login/login.component';
+import { CategoriesComponent } from './categories/categories.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    HomeComponent,
+    SignupComponent,
     LoginComponent,
-    CategoriesComponent,
-    SignupComponent
+    CategoriesComponent
   ],
   imports: [
     BrowserModule,
-    FormsModule,
     AppRoutingModule,
+    FormsModule,
     HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
-
 ```
 
 `app.component.html`
 
 ```html
-<div class="container">
-  <header>
-    <a routerLink="/">Recipe App</a>
-    <nav>
-      <a routerLink="/signup">SIGN UP</a>
-      <a routerLink="/categories">CATEGORIES</a>
-      <a routerLink="/login">LOG IN</a>
-    </nav>
-  </header>
+<nav>
+  <div class="nav-wrapper">
+    <a class="brand-logo" routerLink="/login">Recipe App</a>
+    <ul id="nav-mobile" class="right hide-on-med-and-down">
+      <li><a routerLink="/categories">All Categories</a></li>
 
-  <div>
-    <router-outlet></router-outlet>
+      <span *ngIf="">
+        <li><a routerLink="/signup">Sign Up</a></li>
+        <li><a routerLink="/login">Log In</a></li>
+      </span>
+      <span *ngIf="">
+        <li><a routerLink="/logout">Log Out</a></li>
+        <li>Hello,</li>
+      </span>
+    </ul>
   </div>
+</nav>
+
+
+<div class="container">
+  <router-outlet></router-outlet>
 </div>
 ```
 
@@ -111,41 +118,50 @@ export class AppModule { }
 
 ```css
 .container {
+  width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  width: 100vw;
-  font-family: Arial;
 }
-header {
-  background-color: lightgrey;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  width: 100vw;
-  padding: 0px 100px;
-  height: 50px;
-}
-nav {
-  width: 500px;
-  display: flex;
-  justify-content: space-between;
-}
-
 ```
 
 <br>
 
 ## Add Materialize
 
+```html
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>AngularRecipesFrontend</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <!-- Compiled and minified CSS -->
+
+</head>
+<body>
+
+  <app-root></app-root>
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>
+```
+
 <br>
 
 ## Register User
 
-1. `mkdir src/app/services/user`
-2. `cd src/app/services/user`
-3. `ng g s user`
+```bash
+mkdir src/app/services/
+mkdir src/app/services/user
+cd src/app/services/user
+ng g s user
+```
 
 1. `signup.component.html`
 
@@ -211,8 +227,7 @@ nav {
 	    console.log(newUser);
 	    this.http
 	      .post(`${herokuUrl}/auth/users/register`, newUser)
-	      .toPromise()
-	      .then(response => console.log(response));
+	      .subscribe(response => console.log(response),serr => console.log(err));
 	  }
 	}
 	```
@@ -264,21 +279,20 @@ nav {
 1. `user.service.ts`
 	
 	```js
-	
 	  loginUser(user): void {
 	    console.log(user);
 	    this.http
 	      .post(`${herokuUrl}/auth/users/login`, user)
-	      .toPromise()
-	      .then(response => {
+	      .subscribe(response => {
 	        const token = response['jwt'];
 	        localStorage.setItem('currentUser', `${user.email}`);
 	        localStorage.setItem('token', `${token}`);
 	        console.log(response, token);
-	      })
-	      .catch(error => console.log(error));
+	      }, err => console.log(err));
 	  }
 	```
+	
+	![](https://i.imgur.com/d37bggf.png)
 
 <br>
 
@@ -327,21 +341,59 @@ nav {
 1. `app.component.html`
 
 	```html
-	
 		<a routerLink="/logout">LOG OUT</a>
-		
 	```
 	
 1. `user.service.ts`
 	
 	```js
+	import { Injectable } from '@angular/core';
+	import { HttpClient } from '@angular/common/http';
+	import { Router } from '@angular/router'; // ADD THIS
+	import { Subject } from 'rxjs'; // ADD THIS
+	
+	const herokuUrl = 'https://damp-bayou-38809.herokuapp.com';
+	
+	@Injectable({
+	  providedIn: 'root'
+	})
+	export class UserService {
+	  currentUser: string;  // ADD THIS
+	  searchSubject = new Subject();  // ADD THIS
+	
+		// INJECT ROUTER
+	  constructor(private http: HttpClient, private router: Router) { console.log('user service loaded'); }
+	
+	  registerUser(newUser): void {
+	    console.log(newUser);
+	    this.http
+	      .post(`${herokuUrl}/auth/users/register`, newUser)
+	      .subscribe(response => console.log(response));
+	  }
+	
+	  loginUser(user): void {
+	    console.log(user);
+	    this.http
+	      .post(`${herokuUrl}/auth/users/login`, user)
+	      .subscribe(response => {
+	        const token = response['jwt'];
+	        localStorage.setItem('currentUser', `${user.email}`);
+	        localStorage.setItem('token', `${token}`);
+	        console.log(response, token);
+	      }, err => console.log(err));
+	  }
+	
+    	// ADD THIS
 	  logoutUser(): void {
 	    localStorage.removeItem('currentUser');
 	    localStorage.removeItem('token');
 	    this.currentUser = '';
 	    this.router.navigate(['/login']);
 	  }
+	}
 	```
+
+1. Navigate to `http://localhost:4200/logout` and check `localStorage` in your console.
 
 <br>
 
@@ -350,25 +402,27 @@ nav {
 1. `app.component.html`
 
 	```html
-	<div class="container">
-	  <header>
-	    <a routerLink="/">Recipe App</a>
-	    <nav>
-	      <a routerLink="/categories">CATEGORIES</a>
+	<nav>
+	  <div class="nav-wrapper">
+	    <a class="brand-logo" routerLink="/login">Recipe App</a>
+	    <ul id="nav-mobile" class="right hide-on-med-and-down">
+	      <li><a routerLink="/categories">All Categories</a></li>
 	
 	      <span *ngIf="!this.currentUser">
-	        <a routerLink="/signup">SIGN UP</a>
-	        <a routerLink="/login">LOG IN</a>
+	        <li><a routerLink="/signup">Sign Up</a></li>
+	        <li><a routerLink="/login">Log In</a></li>
 	      </span>
 	      <span *ngIf="this.currentUser">
-	        <a routerLink="/logout">LOG OUT</a>
+	        <li><a routerLink="/logout">LOG OUT</a></li>
+	        <li>Hello,</li>
 	      </span>
-	    </nav>
-	  </header>
-	
-	  <div>
-	    <router-outlet></router-outlet>
+	    </ul>
 	  </div>
+	</nav>
+	
+	
+	<div class="container">
+	  <router-outlet></router-outlet>
 	</div>
 	```
 
@@ -377,7 +431,6 @@ nav {
 	```js
 	import { Injectable } from '@angular/core';
 	import { HttpClient } from '@angular/common/http';
-	import { CategoryService } from '../category/category.service';
 	import { Router } from '@angular/router';
 	import { Subject } from 'rxjs';
 	
@@ -403,8 +456,7 @@ nav {
 	
 	    this.http
 	      .post(`${herokuUrl}/auth/users/login`, user)
-	      .toPromise()
-	      .then(response => {
+	      .subscribe(response => {
 	        const token = response['jwt'];
 	        localStorage.setItem('currentUser', `${user.email}`);
 	        localStorage.setItem('token', `${token}`);
@@ -412,8 +464,7 @@ nav {
 	        this.currentUser = user.email;
 	        this.searchSubject.next(this.currentUser);
 	        this.router.navigate(['/categories']);
-	      })
-	      .catch(error => console.log(error));
+	      }, err => console.log(err));
 	  }
 	
 	  logoutUser(): void {
@@ -438,7 +489,6 @@ nav {
 	  styleUrls: ['./app.component.css']
 	})
 	export class AppComponent {
-	  title = 'angular-recipes-frontend';
 	  currentUser: any;
 	
 	  constructor(private userService: UserService) { }
@@ -453,6 +503,16 @@ nav {
 	}
 	```
 
+<br>
+
+
+## Create a Category Service
+
+```bash
+mkdir src/app/services/category
+cd src/app/services/category
+ng g s category
+```
 
 <br>
 
